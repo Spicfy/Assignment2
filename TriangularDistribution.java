@@ -13,7 +13,7 @@ public class TriangularDistribution {
 	 * a, c, b are the three parameters on the x axis of
 	 * https://en.wikipedia.org/wiki/File:Triangular_distribution_PMF.png
 	 */
-	int a, c, b;
+	private int a, c, b;
 
 	/**
 	 * Constructor for TriangularDistribution. You need to verify that the following
@@ -24,9 +24,16 @@ public class TriangularDistribution {
 	 * @param b is the upper limit of the distribution
 	 */
 	public TriangularDistribution(int a, int c, int b) {
-	
+		this.a = a;
+		this.c = c;
+		this.b = b;
 		// WRITE YOUR CODE HERE!
 
+	}
+	public TriangularDistribution(){
+		this.a = 0;
+		this.b = 100;
+		this.c = 50;
 	}
 
 	/**
@@ -34,10 +41,34 @@ public class TriangularDistribution {
 	 * @return the probability density at point x
 	 */
 	public Rational pdf(int x) {
-
-		// WRITE YOUR CODE HERE!
-
-		return null; // Remove this statement when your implementation is complete.
+		Rational newRational; 
+		int num, den;
+		if (x < a){
+			newRational = new Rational(0, 1);
+			return newRational;
+		}
+		else if(a<= x && x < c){
+			 num = 2*(x-a);
+			 den = (b-a)*(c-a);
+			newRational = new Rational(num, den);
+			return newRational;
+		}
+		else if(x == c){
+			den = b-a;
+			newRational = new Rational(2, den);
+			return newRational;
+		}
+		else if(c < x && x <=b){
+			num = 2*(b-x);
+			den = (b-a)*(b-c);
+			newRational = new Rational(num, den);
+			return newRational;
+		}
+		else if(b < x){
+			newRational = new Rational(0, 1);
+			return newRational;
+		}
+		return null;
 	}
 
 	/**
