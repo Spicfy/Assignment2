@@ -69,7 +69,12 @@ public class Simulator {
 		this.steps = steps;
 
 		this.clock = 0;
+
+		Rational perSecondArrivalRate = new Rational(perHourArrivalRate, 3600);
+
 		
+
+
 		// YOUR CODE HERE! YOU SIMPLY NEED TO COMPLETE THE LINES BELOW:
 
 		// What should the two questions marks be filled with? 
@@ -101,11 +106,23 @@ public class Simulator {
 		// defined as a local variable too.
 
 		while (clock < steps) {
+			if (carArrivesThisSecond(probabilityOfArrivalPerSec)){
+				Car car = RandomGenerator.generateRandomCar();
+				Spot spot = new Spot(car, clock);
+				incomingQueue.enqueue(spot);
+			}
 	
 			// WRITE YOUR CODE HERE!
 
 			clock++;
 		}
+	}
+	public boolean carArrivesThisSecond(Rational probability){
+		boolean probabilistically = RandomGenerator.eventOccurred(probability);
+		return probabilistically;
+	}
+	public boolean carLeavesThisSecond(int duration){
+		
 	}
 
 	/**
