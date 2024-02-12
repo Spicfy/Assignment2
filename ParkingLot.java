@@ -90,16 +90,6 @@ public class ParkingLot {
 	 * @return the car removed; the method returns null when either i or j are out
 	 *         of range, or when there is no car parked at (i, j)
 	 */
-	public Car remove(int i, int j) {
-		// WRITE YOUR CODE HERE!
-		if (i>numRows||j>numSpotsPerRow){
-			return null;
-		}
-		Spot removed = occupancy[i][j];
-		occupancy[i][j] = null;
-		return removed; // REMOVE THIS STATEMENT AFTER IMPLEMENTING THIS METHOD
-
-	}
 
 	/**
 	 * Checks whether a car (which has a certain type) is allowed to park at
@@ -112,6 +102,9 @@ public class ParkingLot {
 	public boolean attemptParking(Car c, int timestamp) {
 		for(int i = 0; i < numRows; i++){
 			for(int j = 0; j < numSpotsPerRow; j++){
+				if(lotDesign[i][j] == CarType.NA){
+					return false;
+				}
 				if(occupancy[i][j] == null){
 					if(lotDesign[i][j]== CarType.LARGE){
 						Spot newSpot = new Spot(c, timestamp);
@@ -301,36 +294,6 @@ public class ParkingLot {
 		}
 
 		// while loop for reading occupancy data
-		while (scanner.hasNext()) {
-			String str = scanner.nextLine();
-			str = str.strip();
-			str = str.replaceAll(" ","");
-			if (str.equals("")){
-
-			}
-			else{
-				String[] x = str.split(SEPARATOR);
-				int i = Integer.parseInt(x[0]);
-				int j = Integer.parseInt(x[1]);
-				CarType type = Util.getCarTypeByLabel(x[2]);
-				String platenum = x[3];
-				Car c = new Car(type,platenum);
-				if (canParkAt(i, j, c)){
-					park(i, j, c);	;
-				}
-			}
-			
-			
-				
-
-
-			
-			// WRITE YOUR CODE HERE!
-		}
-
-		scanner.close();
-	}
-
 	/**
 	 * Produce string representation of the parking lot
 	 * 
