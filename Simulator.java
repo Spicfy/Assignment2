@@ -69,12 +69,7 @@ public class Simulator {
 		this.steps = steps;
 
 		this.clock = 0;
-
-		Rational perSecondArrivalRate = new Rational(perHourArrivalRate, 3600);
-
 		
-
-
 		// YOUR CODE HERE! YOU SIMPLY NEED TO COMPLETE THE LINES BELOW:
 
 		// What should the two questions marks be filled with? 
@@ -82,13 +77,13 @@ public class Simulator {
 		// All you need to do is to convert this hourly rate into 
 		// a per-second rate (probability).
 		
-		//this.probabilityOfArrivalPerSec = new Rational(?, ?);
+		this.probabilityOfArrivalPerSec = new Rational(perHourArrivalRate,3600);
 
 		
 		// Finally, you need to initialize the incoming and outgoing queues
 
-		// incomingQueue = new ...
-		// outgoingQueue = new ...
+		 incomingQueue = new LinkedQueue<Spot>();
+  		 outgoingQueue = new LinkedQueue<Spot>();
 
 	}
 
@@ -100,28 +95,72 @@ public class Simulator {
 	public void simulate() {
 	
 		// Local variables can be defined here.
+	
 
 		this.clock = 0;
 		// Note that for the specific purposes of A2, clock could have been 
 		// defined as a local variable too.
 
 		while (clock < steps) {
-			if (carArrivesThisSecond(probabilityOfArrivalPerSec)){
+			if (CarArrivesThisSecond(probabilityOfArrivalPerSec)){
 				Car car = RandomGenerator.generateRandomCar();
-				Spot spot = new Spot(car, clock);
+				Spot spot = new Spot(car,clock);
 				incomingQueue.enqueue(spot);
 			}
+			for (int i =0;i<lot.getNumRows();i++){
+				for (int j = 0;j<lot.getNumSpotsPerRow();j++){
+					Spot parkedcar = lot.getSpotAt(i,j);
+					if (parkedcar==null){
+
+					}
+					else{
+						if (clock-parkedcar.getTimestamp()==MAX_PARKING_DURATION){
+							outgoingQueue.enqueue(parkedcar);
+							lot.remove(i,j);
+						}
+						else if (clock-parkedcar.getTimestamp()<MAX_PARKING_DURATION){
+							if(RandomGenerator.eventOccurred(departurePDF.pdf(parkedcar.getTimestamp()))){
+								outgoingQueue.enqueue(parkedcar);
+								lot.remove(i,j);
+
+							}
+						}
+					}
+						
+
+				}
+
+			}
+
+
+			
+
 	
 			// WRITE YOUR CODE HERE!
+			if (!incomingQueue.isEmpty()){
+				Spot s = incomingQueue.dequeue();
+				Car c = s.getCar();
+				if(lot.attemptParking(c,clock)){
+					System.out.println(c+" Entered at timestep "+clock+"; occupancy is at "+lot.getTotalOccupancy());
+				}
+			
+				
+			
+				 
+			}
+			if (!outgoingQueue.isEmpty()){
+				Spot s = outgoingQueue.dequeue();
+				Car c = s.getCar();
+				System.out.println(c+" EXITED at timestep "+clock+"; occupancy is at "+lot.getTotalOccupancy());
+			}
 
 			clock++;
 		}
 	}
-	public boolean carArrivesThisSecond(Rational probability){
+
+	private boolean CarArrivesThisSecond(Rational probability){
 		boolean probabilistically = RandomGenerator.eventOccurred(probability);
-		return probabilistically;
-	}
-	public boolean carLeavesThisSecond(int duration){
+		return probabilistically; 
 		
 	}
 
