@@ -24,18 +24,19 @@ public class TriangularDistribution {
 	 * @param b is the upper limit of the distribution
 	 */
 	public TriangularDistribution(int a, int c, int b) {
-		this.a = a;
-		this.c = c;
-		this.b = b;
+		if (a<c&&c<b){
+			this.a = a;
+			this.b = b;
+			this.c = c;
+		}
+		else{
+			this.a=0;
+			this.b=100;
+			this.c=50;
+		}
 		// WRITE YOUR CODE HERE!
 
 	}
-	public TriangularDistribution(){
-		this.a = 0;
-		this.b = 100;
-		this.c = 50;
-	}
-
 	/**
 	 * @param x is a point on the x axis
 	 * @return the probability density at point x
