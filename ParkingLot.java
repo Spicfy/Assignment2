@@ -1,4 +1,5 @@
-import java.io.File;import java.util.Scanner;
+import java.io.File;
+import java.util.Scanner;
 
 /**
  * @author Mehrdad Sabetzadeh, University of Ottawa
@@ -44,6 +45,9 @@ public class ParkingLot {
 
 		// WRITE YOUR CODE HERE!
 		calculateLotDimensions(strFilename);
+		
+		lotDesign = new CarType[numRows][numSpotsPerRow];
+		occupancy = new Spot[numRows][numSpotsPerRow];
 
 		populateDesignFromFile(strFilename);
 		
@@ -106,8 +110,11 @@ public class ParkingLot {
 	public Spot getSpotAt(int i, int j) {
 
 		// WRITE YOUR CODE HERE!
-		
-		return occupancy[i][j]; // Remove this statement when your implementation is complete.
+		if (i>numRows||j>numSpotsPerRow){
+			return null;
+		}
+		return occupancy[i][j]; 
+		// Remove this statement when your implementation is complete.
 	}
 
 	/**
@@ -237,30 +244,22 @@ public class ParkingLot {
 	}
 
 	private void calculateLotDimensions(String strFilename) throws Exception {
-		Scanner scanner = new Scanner(new File(strFilename));
-		String s = scanner.nextLine();
-		s = s.strip();
-		int x = 0;
-		int a = 0;
-		while (scanner.hasNext()) {
-			String str = scanner.nextLine();
-			str = str.strip();
-			str =str.replaceAll(SEPARATOR,"");
-			str = str.replaceAll(" ","");
-			if(str.equals("")){
-
-			}
-
-			else{
-				x++;
-			}
-			
-		numRows = x+1;
-		numSpotsPerRow = a;
 		
-		scanner.close();
-				
+		Scanner scanner = new Scanner(new File(strFilename));
+
+		while (scanner.hasNext()) {
+			String str = scanner.nextLine().trim();
+
+			if (str.isEmpty()) {
+				// Do nothing
+			} else {
+				numRows++;
+				String[] tokens = str.split(SEPARATOR);
+				numSpotsPerRow = Integer.max(tokens.length, numSpotsPerRow);
+			}
 		}
+
+		scanner.close();
 		
 		
 
@@ -277,7 +276,7 @@ public class ParkingLot {
 
 		// YOU MAY NEED TO DEFINE SOME LOCAL VARIABLES HERE!
 		int counter = -1;
-		lotDesign = new CarType[numRows][numSpotsPerRow];
+		
 		// while loop for reading the lot design
 		while (scanner.hasNext()) {
 			String str = scanner.nextLine();
