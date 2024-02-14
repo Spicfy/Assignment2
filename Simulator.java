@@ -95,6 +95,7 @@ public class Simulator {
 	public void simulate() {
 	
 		// Local variables can be defined here.
+		Spot [] x = new Spot[1];
 	
 
 		this.clock = 0;
@@ -137,12 +138,28 @@ public class Simulator {
 
 	
 			// WRITE YOUR CODE HERE!
-			if (!incomingQueue.isEmpty()){
+			if (x[0]!=null){
+				Car failedPark = x[0].getCar();
+				if (lot.attemptParking(failedPark,clock)){
+					System.out.println(failedPark+" ENTERED at timestep "+clock+"; occupancy is at "+lot.getTotalOccupancy());
+					x[0]=null;
+
+
+				}
+				else{
+					
+				}
+			
+			}
+			else if (!incomingQueue.isEmpty()){
 				Spot s = incomingQueue.dequeue();
 				Car c = s.getCar();
 				if(lot.attemptParking(c,clock)){
-					System.out.println(c+" Entered at timestep "+clock+"; occupancy is at "+lot.getTotalOccupancy());
+					System.out.println(c+" ENTERED at timestep "+clock+"; occupancy is at "+lot.getTotalOccupancy());
 				}
+				else{
+					x[0] = s;
+			}
 			
 				
 			
